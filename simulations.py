@@ -39,7 +39,7 @@ class simulation:
 
         self.V_I = inf_trader.V_I
         
-        if strategy=="alternative filter":
+        if strategy=="alternative filter" or strategy=="naive filter":
             self.V_B = broker.V_B_alt
         else:
             self.V_B = broker.V_B
