@@ -208,45 +208,6 @@ class broker:
         f2_eval = lambda t: CubicSpline(self.timesteps, f2)(t)
         self.denom_constr = lambda t: np.sqrt(self.k - inf.k * f2_eval(t)**2)
         
-        # computing the mathfrak G function
-        
-        GF0 = -(env.b/env.sigma_s)**2 * V_I - f3/2 - (env.b/(2*inf.k*f2))
-        GF0[-1] = GF0[-2]
-        GF_alpha = -1/(2*inf.k) - f1*(f3/2 + GF0)
-        GF_alpha[-1] = 0
-        GF1 = (env.b/env.sigma_s)**2  * V_I * f2
-        GF2 = self.theta_B * self.mu_B * f2
-        GF3 = env.sigma_alpha * f1
-        GF4 = (env.b/(env.sigma_s)) * V_I * f2
-        
-        GF5 = np.sqrt(GF3**2 + GF4**2 + 2 * env.corr * GF3 * GF4)
-        
-        dGF3 = env.sigma_alpha * (-1/(2*inf.k) + env.kappa_alpha * f1 - f3*f1/2)
-        dGF4 = (env.b/env.sigma_s) * (V_I * (-env.b/(2*inf.k) + self.theta_B * f2 - f3*f2/2) + f2 * (self.sigma_B**2 - 2*self.theta_B*V_I - (env.b*V_I/env.sigma_s)**2))
-        
-        GF6 = -(dGF3 * (GF3 + env.corr*GF4) + dGF3 * (env.corr * GF3 + GF4))/(GF5**2)
-        GF6[-1] = GF6[-2]
-        
-        GF7 = GF_alpha/GF5
-        GF7[-1] = GF7[-2]
-        
-        kF = (GF3 + env.corr * GF4)/GF5
-        kF[-1] = kF[-2]
-        
-        self.GF0 = GF0
-        self.GF1 = GF1
-        self.GF2 = GF2
-        self.GF3 = GF3
-        self.GF4 = GF4
-        self.GF5 = GF5
-        self.GF6 = GF6
-        self.GF7 = GF7
-        self.GF_alpha = GF_alpha
-        self.kF = kF
-        
-        GF7_eval = lambda t: CubicSpline(self.timesteps, GF7)(t)
-        kF_eval = lambda t: CubicSpline(self.timesteps, kF)(t)
-        
         # calculating the conditional variance of the filter
         
         dP = lambda t, p: (1 - env.corr**2) * env.sigma_alpha**2 + 2 * (-env.kappa_alpha - env.corr*env.sigma_alpha / env.sigma_s)*p - (p**2)/env.sigma_s**2
@@ -259,19 +220,6 @@ class broker:
                         )          
         self.V_B = sol.y.reshape(-1,)
         self.V_B_eval = lambda t: CubicSpline(self.timesteps, self.V_B)(t)
-        
-        # calculating the conditional variance of the alternative filter
-        
-        dP_alt = lambda t, p: self.scale_ivp * env.sigma_alpha**2 * (1-kF_eval(t)**2) - 2*(env.kappa_alpha + GF7_eval(t) * env.sigma_alpha * kF_eval(t))*p - (1/self.scale_ivp) * (GF7_eval(t)*p)**2
-        p_init = np.array([self.sigma_0])
-        sol = solve_ivp(fun = dP_alt, 
-                        t_span = [0,env.T], 
-                        y0 = self.scale_ivp * p_init,
-                        t_eval = self.timesteps,
-                        method = 'DOP853'
-                        )          
-        self.V_B_alt = sol.y.reshape(-1,) / self.scale_ivp
-        self.V_B_alt_eval = lambda t: CubicSpline(self.timesteps, self.V_B_alt)(t)
         
         self.P1 = np.zeros((self.N, 1, 4))
         self.P2 = np.zeros((self.N, 4 , 4))

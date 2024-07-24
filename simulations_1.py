@@ -62,20 +62,6 @@ class simulation:
         self.nu_B_hat = np.zeros((env.Nt + 1, nsims))
         
         self.alpha_hat = np.zeros((env.Nt + 1, nsims))
-        self.gamma_tilde = np.zeros((env.Nt + 1, nsims))
-        self.gamma = np.zeros((env.Nt + 1, nsims))
-        self.integral_subtract = np.zeros((env.Nt + 1, nsims))
-        self.Z_tilde = np.zeros((env.Nt + 1, nsims))
-        self.Z = np.zeros((env.Nt + 1, nsims))
-        self.integral_subtract_Z = np.zeros((env.Nt + 1, nsims))
-
-        self.gamma_tilde[0, :] = self.nu_I[0, :] - f0[0] - f3[0] * self.Q_I[0, :]
-        self.Z_tilde[0, :] = self.gamma_tilde[0, :]/broker.GF5[0]
-        self.Z[0, :] = self.Z_tilde[0, :]
-        self.integral_subtract_Z[0, :] = dt*(self.Z_tilde[0, :] * broker.GF6[0] + self.gamma_tilde[0, :] * broker.GF0[0]/broker.GF5[0] 
-                                       + self.nu_B[0, :] * broker.GF1[0]/broker.GF5[0] + broker.GF2[0]/broker.GF5[0])
-
-        self.I = np.zeros((env.Nt + 1, nsims))
 
         for i, t in enumerate(env.timesteps[:-1]):
 
