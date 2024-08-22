@@ -153,7 +153,7 @@ class informed:
         z1 = z_eval_t[1]
         z2 = z_eval_t[2]
         g2 = z_eval_t[9]
-        informed_optimal = (z0 + z1*alpha + self.c_importance*z2*hat_nu + 2*Q *g2)/(2*self.k)
+        informed_optimal = (z0 + z1*alpha + z2*hat_nu + 2*Q *g2)/(2*self.k)
         return informed_optimal
     
   
