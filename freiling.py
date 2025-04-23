@@ -67,12 +67,12 @@ def freiling(env, inf_trader, broker):
         ax[j].set_xlim(0,1)
         if j == 1:
             ax[j].axhline(0, linestyle='-.', color = 'black', linewidth=1)
-        if j == 2:
-            ax[j].yaxis.set_major_formatter(FormatStrFormatter('%.4f'))
+        #if j == 2:
+            #ax[j].yaxis.set_major_formatter(FormatStrFormatter('%.4f'))
         ax[j].set_xlabel(r'$t$', fontsize = font1)
         ax[j].tick_params(axis='both', which='major', labelsize=font2)
 
-    fig.suptitle(r'Eigenvalues of $L(t) + L(t)^\top$ ($1 + \mathfrak{b}\, f_3 > 0$ ' + f'is {cond_0})', fontsize=font0) 
+    fig.suptitle(rf'$\mathrm{{Eigenvalues}}$ $\mathrm{{of}}$ $L(t) + L(t)^\top$ ($1 + \mathfrak{{b}}\, f_3 > 0$ $\mathrm{{is}}$ $\mathrm{{{cond_0}}}$)', fontsize=font0) 
     plt.tight_layout()
     plt.savefig(f'figures/freiling condition.pdf',format='pdf',bbox_inches='tight')
     plt.show()
