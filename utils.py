@@ -199,6 +199,7 @@ class broker:
         # computing the matrices in the HJB Riccatti equation
         
         z = inf.z
+        self.z = z
         f0 = z[0] / 2 / inf.k
         f1 = z[1] / 2 / inf.k
         f2 = inf.c_importance * z[2] / 2 / inf.k
